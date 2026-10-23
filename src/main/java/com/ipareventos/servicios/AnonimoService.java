@@ -52,7 +52,7 @@ public class AnonimoService {
 		return categoriaMapper.toDtoList(categoriaRepository.findAll());
 	}
 
-	public List<EventoResumenDto> listarEventos(@Positive Long categoriaId) {
+	public List<EventoResumenDto> listadoEventos(@Positive Long categoriaId) {
 
 		LocalDateTime ahora = LocalDateTime.now();
 
@@ -80,7 +80,7 @@ public class AnonimoService {
 	}
 
 	@Transactional
-	public UsuarioDto registrar(@NotNull @Valid UsuarioRegistroDto dto) {
+	public UsuarioDto registrarse(@NotNull @Valid UsuarioRegistroDto dto) {
 
 		if (usuarioRepository.existsByEmail(dto.email())) {
 			throw new EmailDuplicadoException();

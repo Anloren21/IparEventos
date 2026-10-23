@@ -80,7 +80,7 @@ public class UsuarioService {
 	}
 
 	@Transactional
-	public void cancelar(@NotNull @Positive Long idInscripcion) {
+	public void cancelarInscripcion(@NotNull @Positive Long idInscripcion) {
 
 		Usuario usuario = obtenerUsuarioActual();
 
