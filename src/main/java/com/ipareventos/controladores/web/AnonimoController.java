@@ -7,6 +7,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ipareventos.servicios.AnonimoService;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.server.ResponseStatusException;
+
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -25,5 +29,18 @@ public class AnonimoController {
 		model.addAttribute("categoriaSeleccionada", categoriaId);
 
 		return "index";
+	}
+
+	@GetMapping("/evento/{id}")
+	public String verEvento(@PathVariable("id") Long id, Model model) {
+
+		var evento = anonimoService.verEvento(id)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "El evento no existe"));
+
+		model.addAttribute("evento", evento);
+
+		model.addAttribute("eventoFuturo", evento.fecha().isAfter(java.time.LocalDateTime.now()));
+
+		return "evento";
 	}
 }
