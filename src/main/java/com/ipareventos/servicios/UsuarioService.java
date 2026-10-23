@@ -65,6 +65,8 @@ public class UsuarioService {
 		Inscripcion inscripcion = Inscripcion.builder().usuario(usuario).evento(evento).plazas(plazas)
 				.fechaInscripcion(ahora).build();
 
+		evento.getInscripciones().add(inscripcion);
+
 		Inscripcion guardada = inscripcionRepository.save(inscripcion);
 
 		return inscripcionMapper.toDto(guardada);
@@ -92,7 +94,9 @@ public class UsuarioService {
 			throw new InscripcionException("Solo puedes cancelar tus propias inscripciones");
 		}
 
-		inscripcionRepository.delete(inscripcion);
+		Evento evento = inscripcion.getEvento();
+
+		evento.getInscripciones().removeIf(existente -> existente.getId().equals(inscripcion.getId()));
 	}
 
 	private Usuario obtenerUsuarioActual() {
