@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{_global :: cabecera('Mis inscripciones')}"></head>
+
+<body class="bg-light">
+
+	<nav th:replace="~{_global :: menu}"></nav>
+
+	<main class="container py-5">
+
+		<h1 class="mb-4">Mis inscripciones</h1>
+
+		<div th:replace="~{_global :: alertas}"></div>
+
+		<div th:if="${#lists.isEmpty(inscripciones)}" class="alert alert-info"
+			role="status">Todavía no tienes inscripciones.</div>
+
+		<div th:unless="${#lists.isEmpty(inscripciones)}"
+			class="table-responsive">
+
+			<table class="table table-striped align-middle">
+				<caption>Inscripciones de tu cuenta</caption>
+
+				<thead>
+					<tr>
+						<th scope="col">Evento</th>
+						<th scope="col">Fecha del evento</th>
+						<th scope="col">Plazas</th>
+						<th scope="col">Fecha de inscripción</th>
+						<th scope="col">Acciones</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr th:each="inscripcion : ${inscripciones}">
+
+						<td><a
+							th:href="@{/evento/{id}(
+                                    id=${inscripcion.eventoId})}"
+							th:text="${inscripcion.tituloEvento}"> </a></td>
+
+						<td
+							th:text="${#temporals.format(
+                                inscripcion.fechaEvento,
+                                'dd/MM/yyyy HH:mm')}">
+						</td>
+
+						<td th:text="${inscripcion.plazas}"></td>
+
+						<td
+							th:text="${#temporals.format(
+                                inscripcion.fechaInscripcion,
+                                'dd/MM/yyyy HH:mm')}">
+						</td>
+
+						<td>
+							<form
+								th:action="@{/inscripciones/{id}/cancelar(
+                                      id=${inscripcion.id})}"
+								method="post">
+
+								<button type="submit" class="btn btn-outline-danger btn-sm">
+									Cancelar inscripción</button>
+
+							</form>
+						</td>
+
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<a th:href="@{/}" class="btn btn-outline-primary"> Ver eventos </a>
+
+	</main>
+
+	<footer th:replace="~{_global :: pie}"></footer>
+
+</body>
+</html>

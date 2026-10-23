@@ -14,7 +14,7 @@ public class SeguridadConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
 		http.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/", "/evento/**", "/registro", "/login", "/error", "/css/**", "/js/**", "/images/**",
+				.requestMatchers("/", "/registro", "/login", "/error", "/css/**", "/js/**", "/images/**",
 						"/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**")
 				.permitAll()
 
@@ -26,6 +26,8 @@ public class SeguridadConfig {
 
 				.requestMatchers("/admin/**", "/api/v1/**").hasRole("ADMINISTRADOR")
 
+				.requestMatchers(HttpMethod.GET, "/evento/**").permitAll()
+				
 				.anyRequest().authenticated()).csrf(csrf -> csrf.ignoringRequestMatchers("/api/v2/usuarios/registrar"))
 				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/login").defaultSuccessUrl("/", true)
 					.failureUrl("/login?error").permitAll()).logout(logout -> logout.logoutSuccessUrl("/login?logout").permitAll())

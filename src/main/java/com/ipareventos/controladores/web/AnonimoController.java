@@ -9,6 +9,7 @@ import com.ipareventos.servicios.AnonimoService;
 import com.ipareventos.excepciones.EmailDuplicadoException;
 import com.ipareventos.mapeadores.FormularioMapper;
 import com.ipareventos.modelos.UsuarioFormModel;
+import com.ipareventos.modelos.InscripcionFormModel;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,6 +51,8 @@ public class AnonimoController {
 		model.addAttribute("evento", evento);
 
 		model.addAttribute("eventoFuturo", evento.fecha().isAfter(java.time.LocalDateTime.now()));
+
+		model.addAttribute("inscripcionFormModel", new InscripcionFormModel());
 
 		return "evento";
 	}

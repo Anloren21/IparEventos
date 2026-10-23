@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:replace="~{_global :: cabecera(${evento.titulo})}"></head>
 
@@ -33,14 +34,12 @@
 
 					<dt class="col-sm-3">Fecha y hora</dt>
 					<dd class="col-sm-9"
-						th:text="${#temporals.format(
-                            evento.fecha, 'dd/MM/yyyy HH:mm')}">
+						th:text="${#temporals.format(evento.fecha, 'dd/MM/yyyy HH:mm')}">
 					</dd>
 
 					<dt class="col-sm-3">Precio por plaza</dt>
 					<dd class="col-sm-9"
-						th:text="${#numbers.formatDecimal(
-                            evento.precio, 1, 'POINT', 2, 'COMMA')} + ' €'">
+						th:text="${#numbers.formatDecimal(evento.precio, 1, 'POINT', 2, 'COMMA')} + ' €'">
 					</dd>
 
 					<dt class="col-sm-3">Aforo total</dt>
@@ -55,17 +54,50 @@
 					role="status">Este evento ya ha comenzado o ha finalizado. No
 					admite nuevas inscripciones.</div>
 
-				<div
-					th:if="${eventoFuturo
-                             and evento.plazasDisponibles <= 0}"
+				<div th:if="${eventoFuturo and evento.plazasDisponibles <= 0}"
 					class="alert alert-warning" role="status">Aforo completo. No
 					quedan plazas disponibles.</div>
 
-				<div
-					th:if="${eventoFuturo
-                             and evento.plazasDisponibles > 0}"
+				<div th:if="${eventoFuturo and evento.plazasDisponibles > 0}"
 					class="alert alert-success" role="status">Hay plazas
 					disponibles para este evento.</div>
+
+				<section th:if="${eventoFuturo and evento.plazasDisponibles > 0}"
+					class="border-top pt-4 mt-4">
+
+					<h2 class="h4 mb-3">Inscribirse</h2>
+
+					<div sec:authorize="isAnonymous()">
+						<p>Inicia sesión para reservar tus plazas.</p>
+
+						<a th:href="@{/login}" class="btn btn-primary"> Iniciar sesión
+						</a> <a th:href="@{/registro}" class="btn btn-outline-secondary">
+							Crear cuenta </a>
+					</div>
+
+					<form sec:authorize="isAuthenticated()"
+						th:action="@{/evento/{id}/inscripciones(id=${evento.id})}"
+						th:object="${inscripcionFormModel}" method="post">
+
+						<div class="mb-3">
+							<label for="plazas" class="form-label"> Número de plazas
+							</label> <input type="number" th:field="*{plazas}" class="form-control"
+								th:errorclass="is-invalid" min="1" max="4" required
+								aria-describedby="plazasAyuda plazasError">
+
+							<div id="plazasAyuda" class="form-text">Puedes reservar
+								entre 1 y 4 plazas por inscripción, siempre que haya
+								disponibilidad.</div>
+
+							<div id="plazasError" class="invalid-feedback"
+								th:errors="*{plazas}"></div>
+						</div>
+
+						<button type="submit" class="btn btn-primary">Confirmar
+							inscripción</button>
+
+					</form>
+				</section>
 
 			</div>
 		</article>
