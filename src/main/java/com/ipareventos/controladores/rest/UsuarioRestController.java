@@ -11,8 +11,14 @@ import com.ipareventos.dtos.UsuarioDto;
 import com.ipareventos.dtos.UsuarioRegistroDto;
 import com.ipareventos.servicios.AnonimoService;
 
+import org.springframework.http.ProblemDetail;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import jakarta.validation.Valid;
 
@@ -25,6 +31,12 @@ import lombok.RequiredArgsConstructor;
 public class UsuarioRestController {
 
 	private final AnonimoService anonimoService;
+
+	@ApiResponses({
+			@ApiResponse(responseCode = "201", description = "Usuario registrado correctamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioDto.class))),
+			@ApiResponse(responseCode = "400", description = "Datos de entrada inválidos. "
+					+ "La propiedad errores contiene los mensajes por campo.", content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))),
+			@ApiResponse(responseCode = "409", description = "Correo electrónico ya registrado o conflicto de datos", content = @Content(mediaType = "application/problem+json", schema = @Schema(implementation = ProblemDetail.class))) })
 
 	@PostMapping("/registrar")
 	@Operation(summary = "Registra un usuario con rol USUARIO")
