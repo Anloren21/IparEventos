@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{_global :: cabecera('Nuevo evento')}"></head>
+
+<body class="bg-light">
+
+	<nav th:replace="~{_global :: menu}"></nav>
+
+	<main class="container py-5">
+		<div class="row justify-content-center">
+			<div class="col-lg-8">
+
+				<h1 class="mb-4">Nuevo evento</h1>
+
+				<form th:action="@{/admin/eventos}" th:object="${eventoFormModel}"
+					method="post" class="card card-body shadow-sm">
+
+					<div th:if="${#fields.hasAnyErrors()}" class="alert alert-danger"
+						role="alert">
+						Revisa los datos del formulario.
+
+						<ul th:if="${#fields.hasGlobalErrors()}" class="mb-0">
+							<li th:each="error : ${#fields.globalErrors()}"
+								th:text="${error}"></li>
+						</ul>
+					</div>
+
+					<div class="mb-3">
+						<label for="titulo" class="form-label"> Título </label> <input
+							type="text" th:field="*{titulo}" class="form-control"
+							th:errorclass="is-invalid" maxlength="50" required>
+
+						<div class="invalid-feedback" th:errors="*{titulo}"></div>
+					</div>
+
+					<div class="mb-3">
+						<label for="descripcion" class="form-label"> Descripción </label>
+
+						<textarea th:field="*{descripcion}" class="form-control"
+							th:errorclass="is-invalid" maxlength="500" rows="4"></textarea>
+
+						<div class="invalid-feedback" th:errors="*{descripcion}"></div>
+					</div>
+
+					<div class="mb-3">
+						<label for="fecha" class="form-label"> Fecha y hora </label> <input
+							type="datetime-local" th:field="*{fecha}" class="form-control"
+							th:errorclass="is-invalid" required>
+
+						<div class="invalid-feedback" th:errors="*{fecha}"></div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-6 mb-3">
+							<label for="aforo" class="form-label"> Aforo </label> <input
+								type="number" th:field="*{aforo}" class="form-control"
+								th:errorclass="is-invalid" min="1" step="1" required>
+
+							<div class="invalid-feedback" th:errors="*{aforo}"></div>
+						</div>
+
+						<div class="col-md-6 mb-3">
+							<label for="precio" class="form-label"> Precio por plaza
+								(€) </label> <input type="number" th:field="*{precio}"
+								class="form-control" th:errorclass="is-invalid" min="0"
+								step="0.01" required>
+
+							<div class="invalid-feedback" th:errors="*{precio}"></div>
+						</div>
+					</div>
+
+					<fieldset class="mb-4">
+						<legend class="fs-6">Categorías</legend>
+
+						<div th:each="categoria : ${categorias}" class="form-check">
+
+							<input type="checkbox" th:field="*{categoriaIds}"
+								th:value="${categoria.id}" class="form-check-input"
+								th:errorclass="is-invalid"> <label
+								class="form-check-label" th:for="${#ids.prev('categoriaIds')}"
+								th:text="${categoria.nombre}"> </label>
+
+						</div>
+
+						<div th:if="${#fields.hasErrors('categoriaIds')}"
+							class="text-danger small" th:errors="*{categoriaIds}"></div>
+					</fieldset>
+
+					<div class="d-flex gap-2">
+						<button type="submit" class="btn btn-primary">Crear
+							evento</button>
+
+						<a th:href="@{/admin}" class="btn btn-outline-secondary">
+							Cancelar </a>
+					</div>
+
+				</form>
+			</div>
+		</div>
+	</main>
+
+	<footer th:replace="~{_global :: pie}"></footer>
+
+</body>
+</html>

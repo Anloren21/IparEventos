@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{_global :: cabecera('Administración')}"></head>
+
+<body class="bg-light">
+
+	<nav th:replace="~{_global :: menu}"></nav>
+
+	<main class="container py-5">
+
+		<div
+			class="d-flex flex-wrap justify-content-between
+                    align-items-center gap-3 mb-4">
+			<h1 class="mb-0">Administración de eventos</h1>
+
+			<a th:href="@{/admin/eventos/nuevo}" class="btn btn-primary">
+				Nuevo evento </a>
+		</div>
+
+		<div th:replace="~{_global :: alertas}"></div>
+
+		<div th:if="${#lists.isEmpty(eventos)}" class="alert alert-info"
+			role="status">No hay eventos registrados.</div>
+
+		<div th:unless="${#lists.isEmpty(eventos)}" class="table-responsive">
+
+			<table class="table table-striped align-middle">
+				<caption>Todos los eventos, incluidos los ya celebrados</caption>
+
+				<thead>
+					<tr>
+						<th scope="col">Evento</th>
+						<th scope="col">Fecha</th>
+						<th scope="col">Precio</th>
+						<th scope="col">Categorías</th>
+						<th scope="col">Acciones</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr th:each="evento : ${eventos}">
+
+						<td th:text="${evento.titulo}"></td>
+
+						<td
+							th:text="${#temporals.format(
+                                evento.fecha, 'dd/MM/yyyy HH:mm')}">
+						</td>
+
+						<td
+							th:text="${#numbers.formatDecimal(
+                                evento.precio, 1, 'POINT', 2, 'COMMA')} + ' €'">
+						</td>
+
+						<td><span th:each="categoria : ${evento.categorias}"
+							class="badge text-bg-secondary me-1"
+							th:text="${categoria.nombre}"> </span></td>
+
+						<td>
+							<div class="d-flex gap-2">
+
+								<a th:href="@{/evento/{id}(id=${evento.id})}"
+									class="btn btn-outline-primary btn-sm"> Ver </a>
+
+								<form
+									th:action="@{/admin/eventos/{id}/eliminar(
+                                          id=${evento.id})}"
+									method="post"
+									onsubmit="return confirm(
+                                          '¿Eliminar el evento y sus inscripciones?');">
+
+									<button type="submit" class="btn btn-outline-danger btn-sm">
+										Eliminar</button>
+
+								</form>
+							</div>
+						</td>
+
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+	</main>
+
+	<footer th:replace="~{_global :: pie}"></footer>
+
+</body>
+</html>
