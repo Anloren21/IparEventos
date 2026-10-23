@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{_global :: cabecera('Próximos eventos')}"></head>
+
+<body class="bg-light">
+
+	<nav th:replace="~{_global :: menu}"></nav>
+
+	<main class="container py-5">
+
+		<div th:replace="~{_global :: alertas}"></div>
+
+		<header class="mb-4">
+			<h1>Próximos eventos</h1>
+			<p class="text-secondary">Descubre nuestras actividades y
+				encuentra tu próximo plan.</p>
+		</header>
+
+		<form th:action="@{/}" method="get"
+			class="row g-3 align-items-end mb-4">
+
+			<div class="col-md-6">
+				<label for="categoria" class="form-label"> Categoría </label> <select
+					id="categoria" name="categoria" class="form-select">
+					<option value="">Todas las categorías</option>
+
+					<option th:each="categoria : ${categorias}"
+						th:value="${categoria.id}" th:text="${categoria.nombre}"
+						th:selected="${categoria.id == categoriaSeleccionada}"></option>
+				</select>
+			</div>
+
+			<div class="col-md-auto">
+				<button type="submit" class="btn btn-primary">Filtrar</button>
+
+				<a th:href="@{/}" class="btn btn-outline-secondary"> Limpiar </a>
+			</div>
+
+		</form>
+
+		<div th:if="${#lists.isEmpty(eventos)}" class="alert alert-info"
+			role="status">No hay eventos futuros para esta selección.</div>
+
+		<div class="row g-4">
+
+			<div class="col-md-6 col-lg-4" th:each="evento : ${eventos}">
+
+				<article class="card h-100 shadow-sm">
+					<div class="card-body d-flex flex-column">
+
+						<h2 class="card-title h5" th:text="${evento.titulo}">Título
+							del evento</h2>
+
+						<p class="text-secondary">
+							<strong>Fecha:</strong> <span
+								th:text="${#temporals.format(
+                                evento.fecha, 'dd/MM/yyyy HH:mm')}">
+							</span>
+						</p>
+
+						<p>
+							<strong>Precio:</strong> <span
+								th:text="${#numbers.formatDecimal(
+                                evento.precio, 1, 'POINT', 2, 'COMMA')} + ' €'">
+							</span>
+						</p>
+
+						<div class="mb-4">
+							<span th:each="categoria : ${evento.categorias}"
+								class="badge text-bg-secondary me-1"
+								th:text="${categoria.nombre}"> </span>
+						</div>
+
+						<a th:href="@{/evento/{id}(id=${evento.id})}"
+							class="btn btn-outline-primary mt-auto"> Ver detalle </a>
+
+					</div>
+				</article>
+
+			</div>
+
+		</div>
+
+	</main>
+
+	<footer th:replace="~{_global :: pie}"></footer>
+
+</body>
+</html>
