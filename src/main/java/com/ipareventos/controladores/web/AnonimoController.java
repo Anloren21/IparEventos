@@ -82,4 +82,9 @@ public class AnonimoController {
 
 		return "redirect:/";
 	}
+
+	@GetMapping("/login")
+	public String login() {
+		return "login";
+	}
 }

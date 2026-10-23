@@ -27,7 +27,9 @@ public class SeguridadConfig {
 				.requestMatchers("/admin/**", "/api/v1/**").hasRole("ADMINISTRADOR")
 
 				.anyRequest().authenticated()).csrf(csrf -> csrf.ignoringRequestMatchers("/api/v2/usuarios/registrar"))
-				.formLogin(form -> form.defaultSuccessUrl("/", true).permitAll()).httpBasic(Customizer.withDefaults());
+				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/login").defaultSuccessUrl("/", true)
+					.failureUrl("/login?error").permitAll()).logout(logout -> logout.logoutSuccessUrl("/login?logout").permitAll())
+					.httpBasic(Customizer.withDefaults());
 
 		return http.build();
 	}
