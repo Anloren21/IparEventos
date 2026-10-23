@@ -1,0 +1,44 @@
+package com.ipareventos.controladores.rest;
+
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+
+import com.ipareventos.dtos.EventoDetalleDto;
+import com.ipareventos.dtos.EventoResumenDto;
+import com.ipareventos.servicios.AnonimoService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+import lombok.RequiredArgsConstructor;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/v2/eventos")
+@Tag(name = "Eventos", description = "Consulta de eventos")
+public class EventoRestController {
+
+	private final AnonimoService anonimoService;
+
+	@GetMapping
+	@Operation(summary = "Lista eventos futuros, con categoría opcional")
+	public List<EventoResumenDto> listadoEventos(@RequestParam(name = "categoria", required = false) Long categoriaId) {
+
+		return anonimoService.listadoEventos(categoriaId);
+	}
+
+	@GetMapping("/{id}")
+	@Operation(summary = "Consulta un evento y sus plazas disponibles")
+	public EventoDetalleDto verEvento(@PathVariable("id") Long id) {
+
+		return anonimoService.verEvento(id)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "El evento no existe"));
+	}
+}
