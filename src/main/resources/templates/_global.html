@@ -19,8 +19,12 @@
 	<nav th:fragment="menu" class="navbar bg-dark" data-bs-theme="dark"
 		aria-label="Navegación principal">
 		<div class="container">
-			<a class="navbar-brand fw-bold" th:href="@{/}"> IparEventos </a> <a
-				class="nav-link text-white" th:href="@{/}"> Eventos </a>
+			<a class="navbar-brand fw-bold" th:href="@{/}"> IparEventos </a> 
+		</div>
+		<div class="d-flex gap-3">
+			<a class="nav-link text-white" th:href="@{/}"> Eventos </a> <a
+				class="nav-link text-white" th:href="@{/registro}"> Crear cuenta
+			</a>
 		</div>
 	</nav>
 
